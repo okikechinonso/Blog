@@ -20,7 +20,8 @@ func(app *application) routes() *gin.Engine  {
 	subRoute := route.Group("/user")
 	subRoute.Use(pkg.CheckLogin())
 	{
-		subRoute.GET("/create")
+		subRoute.POST("/addpost",app.AddPost)
+		subRoute.GET("/addpostpage",app.AddPostPage)
 	}
 
 	return route

@@ -36,5 +36,19 @@
             </div>
         </div>
     </header>
+    <main>
+        <form action="/addpost/" method="post">
+            <div class="container overflow-hidden">
+                <div class="mb-3">
+                    <label for="exampleFormControlTextarea1" class="form-label">Edit Post</label>
+                    <textarea class="form-control" name="title" placeholder="Add type something here" id="exampleFormControlTextarea1" cols="30" rows="1"></textarea><br>
+                    <textarea class="form-control" name="message" placeholder="Add type something here" id="exampleFormControlTextarea2" rows="3"></textarea>
+                </div>
+                <div id="publish" class="col-auto">
+                    <input type="submit" class="btn btn-primary mb-3" value="Publish Article">
+                </div>
+            </div>
+        </form>
+    </main>
 </body>
 </html>

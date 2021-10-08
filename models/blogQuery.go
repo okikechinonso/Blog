@@ -17,17 +17,21 @@ type Comment struct{
 	Blogger string
 	Message string
 }
-
-func (d DBModel) AddPost(blg *Post) {
+type Iblog interface {
+	AddPostToDatabase(blg *Post) error
+	AllPost() (posts []Post, err error)
+}
+func (d DBModel) AddPostToDatabase(blg *Post) error{
 	_, err :=
 		d.Db.Exec(`INSERT INTO blogPosts (id, blogger,title, message,likes) VALUES (?, ?, ?,?,?)`,
 			blg.Id, blg.Userid, blg.Title,blg.Message,blg.Like)
 	if err != nil {
-		fmt.Errorf("blogPost: %v", err)
+		return err
 	}
+	return nil
 }
 
-func(d DBModel) AllData() (posts []Post, err error) {
+func(d DBModel) AllPost() (posts []Post, err error) {
 	// An albums slice to hold data from returned rows.
 	rows, err := d.Db.Query(`SELECT id, blogger,title, message  FROM post`)
 	if err != nil {

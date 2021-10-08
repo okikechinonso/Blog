@@ -88,6 +88,10 @@ func (app *application) Login(ctx *gin.Context){
 	ctx.String(http.StatusNotFound,"could not login in")
 
 }
+func ( app *application) logout (ctx *gin.Context){
+	ctx.SetCookie("session","",-1,"/","localhost",true,true)
+	ctx.Redirect(http.StatusFound,"/")
+}
 
 
 
