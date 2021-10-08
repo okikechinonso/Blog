@@ -1,2 +1,4 @@
 Makefile
 modd.conf
+.gitignore
+.idea
