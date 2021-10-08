@@ -1,0 +1,26 @@
+package main
+
+import (
+	"blog/Db"
+	"blog/models"
+	"net/http"
+)
+
+type application struct {
+	user models.IUsers
+}
+
+
+
+
+func main(){
+	db := Db.ConnectToDatabase()
+	app := &application{
+		user: &models.DBModel{Db: db},
+	}
+
+	server := &http.Server{Addr: "localhost:8000",
+		Handler: app.routes(),
+	}
+	server.ListenAndServe()
+}
