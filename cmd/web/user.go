@@ -4,6 +4,7 @@ import (
 	"blog/helper"
 	_"blog/helper"
 	"blog/models"
+	"fmt"
 	"github.com/gin-gonic/gin"
 	"github.com/google/uuid"
 	"log"
@@ -11,7 +12,12 @@ import (
 )
 
 func (app *application) Home(ctx *gin.Context)  {
-	ctx.HTML(http.StatusOK,"home.html",models.BlogUser{})
+	session, err := ctx.Cookie("session")
+	if err != nil {
+		ctx.HTML(http.StatusOK,"home.html",models.BlogUser{})
+	}
+	fmt.Println(session)
+	ctx.Redirect(http.StatusFound,"/blogHome")
 }
 
 func (app *application) SignUpPage(ctx *gin.Context)  {
@@ -60,6 +66,9 @@ func (app *application) LoginPage(ctx *gin.Context){
 	ctx.HTML(http.StatusOK,"login.html",models.BlogUser{})
 }
 
+func (app *application) blogHome (ctx *gin.Context){
+	ctx.HTML(http.StatusOK,"blogHome.html",models.BlogUser{})
+}
 
 func (app *application) Login(ctx *gin.Context){
 
@@ -81,14 +90,14 @@ func (app *application) Login(ctx *gin.Context){
 	ctx.SetCookie("session",b.Id,3600,"/","localhost",true,true)
 	ok := helper.ComparePassword(b.PassWord, password)
 	if ok{
-		ctx.Redirect(http.StatusFound,"/")
+		ctx.Redirect(http.StatusFound,"/blogHome")
 		log.Println("working after setting cookie")
 		return
 	}
 	ctx.String(http.StatusNotFound,"could not login in")
 
 }
-func ( app *application) logout (ctx *gin.Context){
+func ( app *application) Logout (ctx *gin.Context){
 	ctx.SetCookie("session","",-1,"/","localhost",true,true)
 	ctx.Redirect(http.StatusFound,"/")
 }

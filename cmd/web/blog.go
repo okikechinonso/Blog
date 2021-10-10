@@ -4,22 +4,23 @@ import (
 	"blog/helper"
 	"blog/models"
 	"github.com/gin-gonic/gin"
+	"github.com/google/uuid"
 	"net/http"
 )
 
 func (app *application) AddPostPage (ctx *gin.Context){
 	_, err := ctx.Cookie("session")
 	if err != nil {
-		ctx.Redirect(http.StatusFound,"/login")
+		ctx.Redirect(http.StatusFound,"/")
 		return
 	}
-	ctx.HTML(http.StatusOK,"add.html",nil)
+	ctx.HTML(http.StatusOK,"add.html",models.Post{})
 }
 
 func(app *application) AddPost (ctx *gin.Context){
-	var post *models.Post
-	var err error
-	post.Userid, err = ctx.Cookie("session")
+	var post = &models.Post{}
+
+	session, err := ctx.Cookie("session")
 	if err != nil {
 		ctx.Redirect(http.StatusFound,"/login")
 		return
@@ -28,6 +29,8 @@ func(app *application) AddPost (ctx *gin.Context){
 		ctx.Redirect(http.StatusFound, "/addpostpage")
 		return
 	}
+	post.Id = uuid.New().String()
+	post.Userid = session
 	post.Title = ctx.PostForm("title")
 	post.Message = ctx.PostForm("message")
 	post.Like = 0
@@ -36,4 +39,9 @@ func(app *application) AddPost (ctx *gin.Context){
 	if err != nil{
 		panic(err)
 	}
+	ctx.Redirect(http.StatusFound,"/")
 }
+
+//func(app *application) Edit (ctx *gin.Context){
+//
+//}
