@@ -14,7 +14,7 @@ import (
 func (app *application) Home(ctx *gin.Context)  {
 	session, err := ctx.Cookie("session")
 	if err != nil {
-		ctx.HTML(http.StatusOK,"home.html",models.BlogUser{})
+		ctx.HTML(http.StatusOK,"blog-single.html",models.BlogUser{})
 	}
 	fmt.Println(session)
 	ctx.Redirect(http.StatusFound,"/blogHome")

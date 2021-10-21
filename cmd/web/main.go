@@ -21,7 +21,8 @@ func main(){
 		blog: &models.DBModel{Db: db},
 	}
 
-	server := &http.Server{Addr: "localhost:8000",
+	server := &http.Server{
+		Addr: "localhost:8000",
 		Handler: app.routes(),
 	}
 	server.ListenAndServe()

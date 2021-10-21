@@ -6,6 +6,7 @@ import (
 
 func(app *application) routes() *gin.Engine  {
 	route := gin.Default()
+	route.Static("/assets", "./ui/assets")
 	route.LoadHTMLGlob("./ui/template/*")
 
 		route.GET("/",app.Home)
