@@ -11,10 +11,7 @@ type application struct {
 	blog models.Iblog
 }
 
-
-
-
-func main(){
+func main() {
 	db := Db.ConnectToDatabase()
 	app := &application{
 		user: &models.DBModel{Db: db},
@@ -22,7 +19,7 @@ func main(){
 	}
 
 	server := &http.Server{
-		Addr: "localhost:8000",
+		Addr:    "localhost:5000",
 		Handler: app.routes(),
 	}
 	server.ListenAndServe()
