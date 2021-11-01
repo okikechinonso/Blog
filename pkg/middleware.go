@@ -5,7 +5,6 @@ import (
 	"net/http"
 )
 
-
 func CheckLogin() gin.HandlerFunc {
 	return func(c *gin.Context) {
 		session, err := c.Cookie("session")
@@ -18,7 +17,3 @@ func CheckLogin() gin.HandlerFunc {
 		c.Next()
 	}
 }
-
-
-
-

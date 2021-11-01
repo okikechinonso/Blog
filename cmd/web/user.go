@@ -2,36 +2,35 @@ package main
 
 import (
 	"blog/helper"
-	_"blog/helper"
+	_ "blog/helper"
 	"blog/models"
-	"fmt"
 	"github.com/gin-gonic/gin"
 	"github.com/google/uuid"
 	"log"
 	"net/http"
 )
 
-func (app *application) Home(ctx *gin.Context)  {
-	session, err := ctx.Cookie("session")
+func (app *application) Home(c *gin.Context) {
+	_, err := c.Cookie("session")
 	if err != nil {
-		ctx.HTML(http.StatusOK,"blog-single.html",models.BlogUser{})
+		c.Redirect(http.StatusFound, "/")
+		return
 	}
-	fmt.Println(session)
-	ctx.Redirect(http.StatusFound,"/blogHome")
+	c.HTML(http.StatusOK, "bloghome.html", models.Post{})
 }
 
-func (app *application) SignUpPage(ctx *gin.Context)  {
-	ctx.HTML(http.StatusOK,"signup.html",nil)
+func (app *application) SignUpPage(c *gin.Context) {
+	c.HTML(http.StatusOK, "signup.html", nil)
 }
 
-func (app *application) Signup(ctx *gin.Context){
+func (app *application) Signup(c *gin.Context) {
 	log.Println("Working first")
 	b := models.BlogUser{}
-	name := ctx.PostForm("name")
-	password := helper.HashPassword(ctx.PostForm("password"))
-	check := helper.IsValidEmail(ctx.PostForm("email"))
+	name := c.PostForm("name")
+	password := helper.HashPassword(c.PostForm("password"))
+	check := helper.IsValidEmail(c.PostForm("email"))
 
-	if  helper.Length(name) || helper.Length(password) || helper.Length(ctx.PostForm("email")) {
+	if helper.Length(name) || helper.Length(password) || helper.Length(c.PostForm("email")) {
 		return
 	}
 	if check != true {
@@ -40,16 +39,16 @@ func (app *application) Signup(ctx *gin.Context){
 	}
 
 	b.Id = uuid.New().String()
-	b.Name =  name
+	b.Name = name
 	b.PassWord = password
-	b.Email = ctx.PostForm("email")
+	b.Email = c.PostForm("email")
 	b.Bio = ""
 	b.State = true
 	b.Followers = 0
 
 	log.Println("working middle")
 
-	err := app.user.QueryUser(&b,b.Email)
+	err := app.user.QueryUser(&b, b.Email)
 	if err != nil {
 		err = app.user.SignUpUser(&b)
 		if err != nil {
@@ -62,47 +61,41 @@ func (app *application) Signup(ctx *gin.Context){
 	log.Println("working last")
 }
 
-func (app *application) LoginPage(ctx *gin.Context){
-	ctx.HTML(http.StatusOK,"login.html",models.BlogUser{})
+func (app *application) LoginPage(c *gin.Context) {
+	c.HTML(http.StatusOK, "login.html", models.BlogUser{})
 }
 
-func (app *application) blogHome (ctx *gin.Context){
-	ctx.HTML(http.StatusOK,"blogHome.html",models.BlogUser{})
+func (app *application) blogHome(c *gin.Context) {
+	c.HTML(http.StatusOK, "bloghome.html", models.BlogUser{})
 }
 
-func (app *application) Login(ctx *gin.Context){
+func (app *application) Login(c *gin.Context) {
 
-	log.Println("working first")
-	password :=ctx.PostForm("password")
-	check := helper.IsValidEmail(ctx.PostForm("email"))
-	if  helper.Length(password) || helper.Length(ctx.PostForm("email")) {
+	password := c.PostForm("password")
+	check := helper.IsValidEmail(c.PostForm("email"))
+	if helper.Length(password) || helper.Length(c.PostForm("email")) {
 		return
 	}
 	if check != true {
 		return
 	}
-	log.Println("working second")
-	b,err := app.user.QueryEmail(ctx.PostForm("email"))
+
+	b, err := app.user.QueryEmail(c.PostForm("email"))
 	if err != nil {
 		panic(err)
 	}
 	log.Println("working after panic")
-	ctx.SetCookie("session",b.Id,3600,"/","localhost",true,true)
+	c.SetCookie("session", b.Id, 3600, "/", "localhost", true, true)
 	ok := helper.ComparePassword(b.PassWord, password)
-	if ok{
-		ctx.Redirect(http.StatusFound,"/blogHome")
+	if ok {
+		c.Redirect(http.StatusFound, "/blogHome")
 		log.Println("working after setting cookie")
 		return
 	}
-	ctx.String(http.StatusNotFound,"could not login in")
+	c.String(http.StatusNotFound, "could not login in")
 
 }
-func ( app *application) Logout (ctx *gin.Context){
-	ctx.SetCookie("session","",-1,"/","localhost",true,true)
-	ctx.Redirect(http.StatusFound,"/")
+func (app *application) Logout(c *gin.Context) {
+	c.SetCookie("session", "", -1, "/", "localhost", true, true)
+	c.Redirect(http.StatusFound, "/")
 }
-
-
-
-
-

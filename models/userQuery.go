@@ -6,14 +6,13 @@ import (
 	"log"
 )
 
-
-type BlogUser struct{
-	Id string
-	Name string `json:"name"`
-	PassWord string `json:"password"`
-	Email string `json:"email"`
-	Bio string	`json:"bio"`
-	State bool `json:"state"`
+type BlogUser struct {
+	Id        string
+	Name      string `json:"name"`
+	PassWord  string `json:"password"`
+	Email     string `json:"email"`
+	Bio       string `json:"bio"`
+	State     bool   `json:"state"`
 	Followers uint32 `json:"follower"`
 }
 
@@ -23,22 +22,22 @@ type DBModel struct {
 
 type IUsers interface {
 	SignUpUser(user *BlogUser) error
-	QueryUser(user *BlogUser,email string) error
+	QueryUser(user *BlogUser, email string) error
 	GetAllUsers(user BlogUser) (users []BlogUser, err error)
 	QueryEmail(email string) (user BlogUser, err error)
 }
 
-func (d *DBModel)SignUpUser(user *BlogUser) error{
+func (d *DBModel) SignUpUser(user *BlogUser) error {
 	stmt := `INSERT INTO user (userid,name, password, email, bio, state, follower) VALUES(?, ?, ?, ?, ?, ?, ?)`
 	sql, err := d.Db.Prepare(stmt)
 
 	if err != nil {
 		return err
 	}
-	_ ,err = sql.Exec(user.Id, user.Name, user.PassWord, user.Email, user.Bio, user.State, user.State)
+	_, err = sql.Exec(user.Id, user.Name, user.PassWord, user.Email, user.Bio, user.State, user.State)
 	return err
 }
-func (d *DBModel)QueryUser(user *BlogUser,email string) error {
+func (d *DBModel) QueryUser(user *BlogUser, email string) error {
 	row := d.Db.QueryRow(`SELECT email FROM user WHERE email = ?`, email)
 	if err := row.Scan(&user.Email); err != nil {
 		return err
@@ -49,17 +48,17 @@ func (d *DBModel)QueryUser(user *BlogUser,email string) error {
 
 func (d *DBModel) QueryEmail(email string) (user BlogUser, err error) {
 	log.Println(" db working first")
-	row := d.Db.QueryRow(`SELECT * FROM user WHERE  email = ?`,email)
-	log.Println(email," db working after scan")
+	row := d.Db.QueryRow(`SELECT * FROM user WHERE  email = ?`, email)
+	log.Println(email, " db working after scan")
 	err = row.Scan(&user.Id, &user.Name, &user.PassWord, &user.Email, &user.Bio, &user.State, &user.Followers)
 
 	if err != nil {
-		return user,err
+		return user, err
 	}
 	return user, nil
 }
 
-func (d *DBModel)GetAllUsers(user BlogUser) (users []BlogUser, err error) {
+func (d *DBModel) GetAllUsers(user BlogUser) (users []BlogUser, err error) {
 	// An albums slice to hold data from returned rows.
 
 	rows, err := d.Db.Query(`SELECT * FROM user`)
@@ -80,7 +79,6 @@ func (d *DBModel)GetAllUsers(user BlogUser) (users []BlogUser, err error) {
 	}
 	return users, nil
 }
-
 
 //func (d DBModel) GetAllPosts() ([]pkg.Post, error) {
 //	// An albums slice to hold data from returned rows.
@@ -147,16 +145,12 @@ func (d *DBModel)GetAllUsers(user BlogUser) (users []BlogUser, err error) {
 //	return comments, nil
 //}
 
-
-
-
 //
 
 //
 //type Notification interface{
 //
 //}
-
 
 //func (b *BlogUser) Login(){
 //

@@ -7,9 +7,7 @@ import (
 	"log"
 )
 
-
-
-func ConnectToDatabase() *sql.DB{
+func ConnectToDatabase() *sql.DB {
 	var db *sql.DB
 	cfg := mysql.Config{
 		User:   "root",
