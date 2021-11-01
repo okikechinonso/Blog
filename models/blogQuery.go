@@ -5,35 +5,36 @@ import (
 	"fmt"
 )
 
-type Post struct{
-	Id string `json:"id"`
-	Userid string `json:"blogger"`
-	Title string `json:"title"`
-	Message string `json:"message"`
-	Like int `json:"like"`
+type Post struct {
+	Id       string `json:"id"`
+	Userid   string `json:"blogger"`
+	Title    string `json:"title"`
+	Message  string `json:"message"`
+	Like     int    `json:"like"`
 	Comments []Comment
 }
 
-type Comment struct{
+type Comment struct {
 	CommentId string
-	PostId string
-	Blogger string
-	Message string
+	PostId    string
+	Blogger   string
+	Message   string
 }
 type Iblog interface {
 	AddPostToDatabase(blg *Post) error
 	AllPost() (posts []Post, err error)
 }
-func (d DBModel) AddPostToDatabase(blg *Post) error{
+
+func (d DBModel) AddPostToDatabase(blg *Post) error {
 	_, err :=
 		d.Db.Exec(`INSERT INTO post (id, userid,title, message,likes) VALUES (?, ?, ?,?,?)`,
-			blg.Id, blg.Userid, blg.Title,blg.Message,blg.Like)
+			blg.Id, blg.Userid, blg.Title, blg.Message, blg.Like)
 	if err != nil {
 		return err
 	}
 	return nil
 }
-func (d DBModel) SelectSinglePost (id string) (Post, error) {
+func (d DBModel) SelectSinglePost(id string) (Post, error) {
 	var post Post
 
 	row := d.Db.QueryRow(`SELECT * FROM post WHERE id, = ?`, id)
@@ -45,7 +46,7 @@ func (d DBModel) SelectSinglePost (id string) (Post, error) {
 	}
 	return post, nil
 }
-func(d DBModel) AllPost() (posts []Post, err error) {
+func (d DBModel) AllPost() (posts []Post, err error) {
 	// An albums slice to hold data from returned rows.
 	rows, err := d.Db.Query(`SELECT id, userid,title, message,likes  FROM post`)
 	if err != nil {
