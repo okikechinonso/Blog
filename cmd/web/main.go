@@ -3,7 +3,11 @@ package main
 import (
 	"blog/Db"
 	"blog/models"
+	"log"
 	"net/http"
+	"os"
+
+	"github.com/joho/godotenv"
 )
 
 type application struct {
@@ -11,10 +15,12 @@ type application struct {
 	blog models.Iblog
 }
 
-
-
-
-func main(){
+func main() {
+	port := os.Getenv("PORT")
+	err := godotenv.Load()
+	if err != nil {
+		log.Println(err.Error())
+	}
 	db := Db.ConnectToDatabase()
 	app := &application{
 		user: &models.DBModel{Db: db},
@@ -22,7 +28,7 @@ func main(){
 	}
 
 	server := &http.Server{
-		Addr: "localhost:8000",
+		Addr:    ":" + port,
 		Handler: app.routes(),
 	}
 	server.ListenAndServe()
