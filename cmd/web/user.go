@@ -16,7 +16,7 @@ func (app *application) Home(c *gin.Context) {
 		c.Redirect(http.StatusFound, "/")
 		return
 	}
-	c.HTML(http.StatusOK, "bloghome.html", models.Post{})
+	c.HTML(http.StatusOK, ".html", models.Post{})
 }
 
 func (app *application) SignUpPage(c *gin.Context) {
