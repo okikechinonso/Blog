@@ -2,32 +2,30 @@ package Db
 
 import (
 	"database/sql"
-	"fmt"
 	"log"
+
 	_ "github.com/lib/pq"
 )
 
-const (
-	host     = "ec2-3-227-15-75.compute-1.amazonaws.com"
-	port     = 5432
-	user     = "toxrdqthftqgwg"
-	password = "6047115930c93b6c21d63063e61de90b60ff428006ce854f83e532cb8384e758"
-	dbname   = "dd7680eila7962"
-)
+// const (
+// 	host     = "ec2-3-227-15-75.compute-1.amazonaws.com"
+// 	port     = 5432
+// 	user     = "toxrdqthftqgwg"
+// 	password = "6047115930c93b6c21d63063e61de90b60ff428006ce854f83e532cb8384e758"
+// 	dbname   = "dd7680eila7962"
+// )
 
 func ConnectToDatabase() *sql.DB {
 	var db *sql.DB
 
-	psqlInfo := fmt.Sprintf("host=%s port=%d user=%s "+
-		"password=%s dbname=%s sslmode=disable",
-		host, port, user, password, dbname)
-	db, err := sql.Open("postgres", psqlInfo)
+	db, err := sql.Open("postgres", "postgres://toxrdqthftqgwg:6047115930c93b6c21d63063e61de90b60ff428006ce854f83e532cb8384e758@ec2-3-227-15-75.compute-1.amazonaws.com:5432/dd7680eila7962")
 	if err != nil {
 		panic(err)
 	}
 
 	err = db.Ping()
 	if err != nil {
+		log.Println(err)
 		panic(err)
 	}
 

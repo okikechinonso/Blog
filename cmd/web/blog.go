@@ -8,7 +8,7 @@ import (
 	"net/http"
 )
 
-func (app *application) AddPostPage (ctx *gin.Context){
+func (app *Application) AddPostPage (ctx *gin.Context){
 	_, err := ctx.Cookie("session")
 	if err != nil {
 		ctx.Redirect(http.StatusFound,"/")
@@ -17,7 +17,7 @@ func (app *application) AddPostPage (ctx *gin.Context){
 	ctx.HTML(http.StatusOK,"add.html",models.Post{})
 }
 
-func(app *application) AddPost (ctx *gin.Context){
+func(app *Application) AddPost (ctx *gin.Context){
 	var post = &models.Post{}
 
 	session, err := ctx.Cookie("session")
@@ -42,6 +42,6 @@ func(app *application) AddPost (ctx *gin.Context){
 	ctx.Redirect(http.StatusFound,"/")
 }
 
-//func(app *application) Edit (ctx *gin.Context){
+//func(app *Application) Edit (ctx *gin.Context){
 //
 //}

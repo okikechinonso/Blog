@@ -10,11 +10,6 @@ import (
 	"github.com/joho/godotenv"
 )
 
-type application struct {
-	user models.IUsers
-	blog models.Iblog
-}
-
 func main() {
 	port := os.Getenv("PORT")
 	err := godotenv.Load()
@@ -22,14 +17,14 @@ func main() {
 		log.Println(err.Error())
 	}
 	db := Db.ConnectToDatabase()
-	app := &application{
+	app := &Application{
 		user: &models.DBModel{Db: db},
 		blog: &models.DBModel{Db: db},
 	}
-
+	r := app.routes()
 	server := &http.Server{
 		Addr:    ":" + port,
-		Handler: app.routes(),
+		Handler: r,
 	}
 	server.ListenAndServe()
 }

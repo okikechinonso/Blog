@@ -2,7 +2,7 @@ package main
 
 import (
 	"blog/helper"
-	_"blog/helper"
+	
 	"blog/models"
 	"fmt"
 	"github.com/gin-gonic/gin"
@@ -11,7 +11,7 @@ import (
 	"net/http"
 )
 
-func (app *application) Home(ctx *gin.Context)  {
+func (app *Application) Home(ctx *gin.Context)  {
 	session, err := ctx.Cookie("session")
 	if err != nil {
 		ctx.HTML(http.StatusOK,"home.html",models.BlogUser{})
@@ -20,11 +20,11 @@ func (app *application) Home(ctx *gin.Context)  {
 	ctx.Redirect(http.StatusFound,"/blogHome")
 }
 
-func (app *application) SignUpPage(ctx *gin.Context)  {
+func (app *Application) SignUpPage(ctx *gin.Context)  {
 	ctx.HTML(http.StatusOK,"signup.html",nil)
 }
 
-func (app *application) Signup(ctx *gin.Context){
+func (app *Application) Signup(ctx *gin.Context){
 	log.Println("Working first")
 	b := models.BlogUser{}
 	name := ctx.PostForm("name")
@@ -34,7 +34,7 @@ func (app *application) Signup(ctx *gin.Context){
 	if  helper.Length(name) || helper.Length(password) || helper.Length(ctx.PostForm("email")) {
 		return
 	}
-	if check != true {
+	if !check  {
 		log.Println("Invalid Email")
 		return
 	}
@@ -62,15 +62,15 @@ func (app *application) Signup(ctx *gin.Context){
 	log.Println("working last")
 }
 
-func (app *application) LoginPage(ctx *gin.Context){
+func (app *Application) LoginPage(ctx *gin.Context){
 	ctx.HTML(http.StatusOK,"login.html",models.BlogUser{})
 }
 
-func (app *application) blogHome (ctx *gin.Context){
+func (app *Application) blogHome (ctx *gin.Context){
 	ctx.HTML(http.StatusOK,"blogHome.html",models.BlogUser{})
 }
 
-func (app *application) Login(ctx *gin.Context){
+func (app *Application) Login(ctx *gin.Context){
 
 	log.Println("working first")
 	password :=ctx.PostForm("password")
@@ -78,7 +78,7 @@ func (app *application) Login(ctx *gin.Context){
 	if  helper.Length(password) || helper.Length(ctx.PostForm("email")) {
 		return
 	}
-	if check != true {
+	if !check  {
 		return
 	}
 	log.Println("working second")
@@ -97,7 +97,7 @@ func (app *application) Login(ctx *gin.Context){
 	ctx.String(http.StatusNotFound,"could not login in")
 
 }
-func ( app *application) Logout (ctx *gin.Context){
+func ( app *Application) Logout (ctx *gin.Context){
 	ctx.SetCookie("session","",-1,"/","localhost",true,true)
 	ctx.Redirect(http.StatusFound,"/")
 }
