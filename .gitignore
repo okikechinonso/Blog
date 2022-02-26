@@ -1,4 +1,4 @@
 Makefile
 modd.conf
-.gitignore
 .idea
+.DS_Store
