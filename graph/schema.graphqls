@@ -2,12 +2,16 @@
 #
 # https://gqlgen.com/getting-started/
 
+type Todo {
+  id: ID!
+  text: String!
+  done: Boolean!
+  user: User!
+}
+
 type User {
   id: ID!
-  firstname: String!
-  lastname: String!
-  email: String!
-  password: String!
+  name: String!
 }
 
 type Query {
