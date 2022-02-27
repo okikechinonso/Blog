@@ -2,3 +2,4 @@ Makefile
 modd.conf
 .idea
 .DS_Store
+.env
