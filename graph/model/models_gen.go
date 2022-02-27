@@ -2,19 +2,26 @@
 
 package model
 
-type NewTodo struct {
-	Text   string `json:"text"`
-	UserID string `json:"userId"`
+import (
+	"github.com/99designs/gqlgen/graphql"
+)
+
+type NewUser struct {
+	FullName    string  `json:"fullName"`
+	Email       string  `json:"email"`
+	ImgURI      *string `json:"img_uri"`
+	DateCreated *string `json:"DateCreated"`
 }
 
-type Todo struct {
-	ID   string `json:"id"`
-	Text string `json:"text"`
-	Done bool   `json:"done"`
-	User *User  `json:"user"`
+type ProfileImage struct {
+	UserID *string         `json:"userId"`
+	File   *graphql.Upload `json:"file"`
 }
 
 type User struct {
-	ID   string `json:"id"`
-	Name string `json:"name"`
+	ID          string `json:"id"`
+	FullName    string `json:"fullName"`
+	Email       string `json:"email"`
+	ImgURI      string `json:"img_uri"`
+	DateCreated string `json:"DateCreated"`
 }
