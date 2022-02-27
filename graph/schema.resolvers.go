@@ -4,10 +4,10 @@ package graph
 // will be copied through when generating and any unknown code will be moved to the end.
 
 import (
+	"blog/graph/generated"
+	"blog/graph/model"
 	"bytes"
 	"context"
-	"digitalocean/graph/generated"
-	"digitalocean/graph/model"
 	"fmt"
 	"io/ioutil"
 	"os"
@@ -43,7 +43,6 @@ func (r *mutationResolver) UploadProfileImage(ctx context.Context, input model.P
 	accessKey := os.Getenv("ACCESS_KEY")
 	secretKey := os.Getenv("SECRET_KEY")
 
-
 	s3Config := &aws.Config{
 		Credentials: credentials.NewStaticCredentials(accessKey, secretKey, ""),
 		Endpoint:    aws.String(os.Getenv("SPACE_ENDPOINT")),
@@ -68,7 +67,6 @@ func (r *mutationResolver) UploadProfileImage(ctx context.Context, input model.P
 	if openErr != nil {
 		fmt.Printf("Error opening file: %v", openErr)
 	}
-	
 
 	defer file.Close()
 
@@ -85,29 +83,26 @@ func (r *mutationResolver) UploadProfileImage(ctx context.Context, input model.P
 		ACL:    aws.String("public-read"),
 	}
 
-	
-
 	if _, uploadErr := s3Client.PutObject(&object); uploadErr != nil {
 		return false, fmt.Errorf("error uploading file: %v", uploadErr)
 	}
 
 	_ = os.Remove(userFileName)
 
-	fmt.Println("here",*input.UserID)
+	fmt.Println("here", *input.UserID)
 
-	user,userErr := r.GetUserByField("ID", *input.UserID)
+	user, userErr := r.GetUserByField("ID", *input.UserID)
 
-	if userErr != nil{
-		return false, fmt.Errorf("error getting user: %v",userErr)
+	if userErr != nil {
+		return false, fmt.Errorf("error getting user: %v", userErr)
 	}
-	
 
 	fileUrl := "https://s3-eu-west-3.amazonaws.com/arp-rental/graphql" + userFileName
 
 	user.ImgURI = fileUrl
-	
-	if _,err := r.UpdateUser(user); err != nil{
-		return false, fmt.Errorf("err updating user: %v",err)
+
+	if _, err := r.UpdateUser(user); err != nil {
+		return false, fmt.Errorf("err updating user: %v", err)
 	}
 
 	return true, nil
