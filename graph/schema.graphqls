@@ -3,7 +3,9 @@ scalar Upload
 
 type User {
   id: ID!
-  fullName: String!
+  firstname: String!
+  lastname: String!
+  password: String!
   email: String!
   img_uri: String!
   DateCreated: String!
@@ -11,6 +13,16 @@ type User {
 
 type Query {
   users: [User]!
+}
+type Blog {
+  id: ID!
+  userId: String!
+  title: String!
+  body: String!
+}
+
+input NewBlog{
+  blog: Blog!
 }
 
 input NewUser {
@@ -20,6 +32,11 @@ input NewUser {
   DateCreated: String
 }
 
+input DeleteBlog{
+  userId: String!
+  blogId: String!
+}
+
 input ProfileImage {
   userId: String
   file: Upload
@@ -27,5 +44,8 @@ input ProfileImage {
 
 type Mutation {
   createUser(input: NewUser!): User!
+  createBlog(input: NewBlog): Blog!
+  deleteBlog(input: DeleteBlog): Boolean!
+  upadateBlog(input: NewBlog): Blog!
   uploadProfileImage(input: ProfileImage!): Boolean!
 }
