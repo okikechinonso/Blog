@@ -5,7 +5,11 @@ This project demonstrates the use of two methods of building web application whi
 Different version of the project are separated in different branches of this repository namely __main__ and __api__. Both application can only be run locally.
 
 To run the main branch
-`go run ./...`
+```
+go run ./...
+```
 
 To run the api branch
-`go run ./server.go`
+```
+go run ./server.go
+```
